@@ -18,7 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from cloze_generator.model.views import GenerateGapsAPIView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
+    path("generate_gaps/", GenerateGapsAPIView.as_view()),
 ]
