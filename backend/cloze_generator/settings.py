@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "cloze_generator.users.apps.UsersConfig",
+    "cloze_generator.model.apps.ModelConfig",
 ]
 
 MIDDLEWARE = [
