@@ -2,6 +2,7 @@ import numpy as np
 import random
 import torch
 import torch.nn.functional as F
+from django.conf import settings
 
 from cloze_generator.model.constants import id2label
 from cloze_generator.model.electra import MultiObjectiveElectra
@@ -148,3 +149,19 @@ def post_processing(model_path):
         )
 
     return post_process
+
+
+def insert_gaps_into_text(text, gaps):
+    result_text = text
+    reversed_gaps = sorted(gaps, key=lambda x: x["start"], reverse=True)
+
+    for gap in reversed_gaps:
+        if gap["entity"] == "GAP":
+            start_index = gap["start"]
+            end_index = gap["end"]
+            replacement_word = settings.GAP_INDICATOR
+            result_text = (
+                result_text[:start_index] + replacement_word + result_text[end_index:]
+            )
+
+    return result_text
