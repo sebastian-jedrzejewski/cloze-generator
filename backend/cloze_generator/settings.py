@@ -46,8 +46,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "djoser",
     "cloze_generator.users.apps.UsersConfig",
     "cloze_generator.model.apps.ModelConfig",
+    "cloze_generator.cloze_tests.apps.ClozeTestsConfig",
 ]
 
 MIDDLEWARE = [
@@ -101,6 +103,22 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+DJOSER = {
+    "SEND_ACTIVATION_EMAIL": False,
+}
+
+
+GAP_INDICATOR = "_____"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

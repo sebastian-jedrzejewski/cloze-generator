@@ -10,7 +10,7 @@ class CreateGapsRequestSerializer(serializers.Serializer):
 
 
 class TokenSerializer(serializers.Serializer):
-    entity = serializers.ChoiceField(choices=list(label2id.keys()))
+    entity = serializers.ChoiceField(choices=list(label2id.keys()), default="GAP")
     score = serializers.DecimalField(max_digits=19, decimal_places=18)
     index = serializers.IntegerField()
     word = serializers.CharField()
