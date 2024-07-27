@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,8 +8,15 @@ import AuthCard from "../../UI/AuthCard";
 import Input from "../common/Input";
 import PasswordInput from "./PasswordInput";
 import passwordValidator from "../../../config/validators/passwordValidator";
+import { AuthContext } from "../../../store/AuthContext/AuthContext";
+import LoadingSpinner from "../../UI/LoadingSpinner";
+import ErrorMessage from "../../UI/ErrorMessage";
 
 const RegisterForm = () => {
+  const { register, registerQueryData, resetRegisterQueryData } =
+    useContext(AuthContext);
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: { newEmail: "", password1: "", password2: "" },
     validationSchema: Yup.object({
@@ -21,9 +29,27 @@ const RegisterForm = () => {
         .oneOf([Yup.ref("password1")], "Passwords don't match"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      const credentials = {
+        email: values.newEmail,
+        password: values.password1,
+      };
+      register(credentials);
     },
   });
+
+  const { isSuccess, error, isLoading } = registerQueryData;
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/account-created");
+      resetRegisterQueryData();
+    }
+  }, [isSuccess]);
+
+  const errorMessage =
+    error?.response?.status === 400
+      ? "User with this email already exists"
+      : "Something went wrong";
 
   return (
     <AuthCard>
@@ -35,14 +61,18 @@ const RegisterForm = () => {
           label={"Repeat password"}
           formik={formik}
         />
-        <Button
-          sx={{ mt: "0.5rem", width: "80%", mb: "1rem" }}
-          variant="contained"
-          color="secondary"
-          type="submit"
-        >
-          {"Register"}
-        </Button>
+        {!isLoading && (
+          <Button
+            sx={{ mt: "0.5rem", width: "80%", mb: "1rem" }}
+            variant="contained"
+            color="secondary"
+            type="submit"
+          >
+            {"Register"}
+          </Button>
+        )}
+        {isLoading && <LoadingSpinner />}
+        {error && <ErrorMessage message={errorMessage} sx={{ mt: 0 }} />}
       </Box>
       <Box sx={{ color: "#242424", py: "0.5rem" }}>
         Already have an account? <Link to="/login">Login here</Link>
