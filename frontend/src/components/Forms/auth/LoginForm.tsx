@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -31,6 +32,9 @@ const LoginForm = () => {
         >
           {"Login"}
         </Button>
+      </Box>
+      <Box sx={{ color: "#242424", py: "0.5rem" }}>
+        Don't you have an account? <Link to="/register">Register here</Link>
       </Box>
     </AuthCard>
   );

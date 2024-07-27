@@ -1,6 +1,8 @@
 import { PropsWithChildren } from "react";
 import { Box } from "@mui/material";
 
+import logo from "../../assets/vite.svg";
+
 const AuthCard: React.FC<PropsWithChildren> = (props) => {
   return (
     <Box
@@ -16,6 +18,20 @@ const AuthCard: React.FC<PropsWithChildren> = (props) => {
         color: "#000",
       }}
     >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: "1rem",
+          columnGap: 2,
+        }}
+      >
+        <Box component="img" src={logo} width="15%"></Box>
+        <Box sx={{ fontSize: "1.3rem", letterSpacing: 2, color: "#5e5d5d" }}>
+          Cloze Generator
+        </Box>
+      </Box>
       {props.children}
     </Box>
   );
