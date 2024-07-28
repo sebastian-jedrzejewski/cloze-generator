@@ -10,6 +10,8 @@ import PasswordInput from "./PasswordInput";
 import { AuthContext } from "../../../store/AuthContext/AuthContext";
 import LoadingSpinner from "../../UI/LoadingSpinner";
 import ErrorMessage from "../../UI/ErrorMessage";
+import COLORS from "../../../constants/colors";
+import MESSAGES from "../../../constants/messages";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -19,8 +21,8 @@ const LoginForm = () => {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: Yup.object({
-      email: Yup.string().required("This field is required"),
-      password: Yup.string().required("This field is required"),
+      email: Yup.string().required(MESSAGES.FIELD_REQUIRED),
+      password: Yup.string().required(MESSAGES.FIELD_REQUIRED),
     }),
     onSubmit: (values) => {
       login(values);
@@ -61,7 +63,7 @@ const LoginForm = () => {
           <ErrorMessage message={"Invalid email or password"} sx={{ mt: 0 }} />
         )}
       </Box>
-      <Box sx={{ color: "#242424", py: "0.5rem" }}>
+      <Box sx={{ color: COLORS.black200, py: "0.5rem" }}>
         Don't you have an account? <Link to="/register">Register here</Link>
       </Box>
     </AuthCard>

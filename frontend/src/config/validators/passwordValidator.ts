@@ -1,10 +1,11 @@
 import * as Yup from "yup";
 
 import passwordValidLength from "./passwordValidLength";
+import MESSAGES from "../../constants/messages";
 
 const passwordValidator = () => {
   return Yup.string()
-    .required("This field is required")
+    .required(MESSAGES.FIELD_REQUIRED)
     .min(
       passwordValidLength.min,
       `Your password must have at least ${passwordValidLength.min} characters`,

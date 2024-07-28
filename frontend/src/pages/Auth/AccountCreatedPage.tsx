@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Box } from "@mui/material";
 
 import AuthCard from "../../components/UI/AuthCard";
+import COLORS from "../../constants/colors";
 
 const AccountCreatedPage = () => {
   return (
@@ -11,7 +12,7 @@ const AccountCreatedPage = () => {
           my: "3.5rem",
           px: "0.2rem",
           fontSize: "1.4rem",
-          color: "#242424",
+          color: COLORS.black200,
         }}
       >
         Your account has been created successfully. Now you can{" "}

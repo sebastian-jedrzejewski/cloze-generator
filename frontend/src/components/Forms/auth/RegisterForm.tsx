@@ -11,6 +11,8 @@ import passwordValidator from "../../../config/validators/passwordValidator";
 import { AuthContext } from "../../../store/AuthContext/AuthContext";
 import LoadingSpinner from "../../UI/LoadingSpinner";
 import ErrorMessage from "../../UI/ErrorMessage";
+import COLORS from "../../../constants/colors";
+import MESSAGES from "../../../constants/messages";
 
 const RegisterForm = () => {
   const { register, registerQueryData, resetRegisterQueryData } =
@@ -22,10 +24,10 @@ const RegisterForm = () => {
     validationSchema: Yup.object({
       newEmail: Yup.string()
         .email("Enter a valid email address")
-        .required("This field is required"),
+        .required(MESSAGES.FIELD_REQUIRED),
       password1: passwordValidator(),
       password2: Yup.string()
-        .required("This field is required")
+        .required(MESSAGES.FIELD_REQUIRED)
         .oneOf([Yup.ref("password1")], "Passwords don't match"),
     }),
     onSubmit: (values) => {
@@ -49,7 +51,7 @@ const RegisterForm = () => {
   const errorMessage =
     error?.response?.status === 400
       ? "User with this email already exists"
-      : "Something went wrong";
+      : MESSAGES.SOMETHING_WENT_WRONG;
 
   return (
     <AuthCard>
@@ -74,7 +76,7 @@ const RegisterForm = () => {
         {isLoading && <LoadingSpinner />}
         {error && <ErrorMessage message={errorMessage} sx={{ mt: 0 }} />}
       </Box>
-      <Box sx={{ color: "#242424", py: "0.5rem" }}>
+      <Box sx={{ color: COLORS.black200, py: "0.5rem" }}>
         Already have an account? <Link to="/login">Login here</Link>
       </Box>
     </AuthCard>

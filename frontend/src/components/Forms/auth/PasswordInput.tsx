@@ -10,6 +10,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React, { useState } from "react";
 
 import ErrorMessage from "../../UI/ErrorMessage";
+import COLORS from "../../../constants/colors";
 
 type Props = {
   id: string;
@@ -75,15 +76,19 @@ const PasswordInput: React.FC<Props> = (props) => {
         {...formik.getFieldProps(id)}
         sx={{
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: errorMessage ? "red" : defaultOutlineColor || "grey",
+            borderColor: errorMessage
+              ? "red"
+              : defaultOutlineColor || COLORS.gray100,
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: errorMessage ? "red" : hoverOutlineColor || "darkgrey",
+            borderColor: errorMessage
+              ? "red"
+              : hoverOutlineColor || COLORS.gray500,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: errorMessage
               ? "red"
-              : focusedOutlineColor || "darkgrey",
+              : focusedOutlineColor || COLORS.gray500,
           },
         }}
       />

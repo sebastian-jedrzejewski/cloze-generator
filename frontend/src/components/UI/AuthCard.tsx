@@ -2,12 +2,13 @@ import { PropsWithChildren } from "react";
 import { Box } from "@mui/material";
 
 import logo from "../../assets/vite.svg";
+import COLORS from "../../constants/colors";
 
 const AuthCard: React.FC<PropsWithChildren> = (props) => {
   return (
     <Box
       sx={{
-        backgroundColor: "#ccc",
+        backgroundColor: COLORS.gray200,
         width: { xs: "100%", md: "50%", lg: "35%" },
         borderRadius: "10px",
         boxShadow: "8px 8px 24px 0px rgba(66, 68, 90, 1)",
