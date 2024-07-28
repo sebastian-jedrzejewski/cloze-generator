@@ -9,7 +9,7 @@ const AuthCard: React.FC<PropsWithChildren> = (props) => {
     <Box
       sx={{
         backgroundColor: COLORS.gray200,
-        width: { xs: "100%", md: "50%", lg: "35%" },
+        width: { xs: "100%", md: "50%", lg: "30%" },
         borderRadius: "10px",
         boxShadow: "8px 8px 24px 0px rgba(66, 68, 90, 1)",
         WebkitBoxShadow: "8px 8px 24px 0px rgba(66, 68, 90, 1)",
