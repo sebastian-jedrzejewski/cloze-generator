@@ -21,6 +21,9 @@ const clozeTestsApi: ClozeTestApi = {
     const response = await axios.get<BackendClozeTestDetailDTO>(`${url}${id}`);
     return parseClozeTestDetailForFE(response.data);
   },
+  deleteClozeTest: async (id: string) => {
+    await axios.delete(`${url}${id}`);
+  },
 };
 
 export default clozeTestsApi;

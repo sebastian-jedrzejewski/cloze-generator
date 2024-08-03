@@ -13,11 +13,15 @@ type Props = {
   options?: IOptions;
 };
 
-const SanitizeHTML: React.FC<Props> = ({ html, options }) => {
-  const sanitizedHtml = sanitizeHtml(html, {
+export const sanitize = ({ html, options }: Props) => {
+  return sanitizeHtml(html, {
     ...defaultOptions,
     ...options,
   });
+};
+
+const SanitizeHTML: React.FC<Props> = ({ html, options }) => {
+  const sanitizedHtml = sanitize({ html, options });
 
   return <p dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
 };

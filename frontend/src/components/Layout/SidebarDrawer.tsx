@@ -43,10 +43,12 @@ const SidebarDrawer: React.FC<Props> = (props) => {
   });
 
   const navigateToTestDetails = (test: ClozeTestListDTO) => {
+    console.log(test);
     if (test.isDraft) {
       navigate(`/cloze-tests/drafts/${test.id}`);
+    } else {
+      navigate(`/cloze-tests/${test.id}`);
     }
-    navigate(`/cloze-tests/${test.id}`);
   };
 
   const drawer = (

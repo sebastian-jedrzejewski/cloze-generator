@@ -38,4 +38,5 @@ export interface ClozeTestDetailDTO extends ClozeTestListDTO {
 export type ClozeTestApi = {
   getClozeTests: () => Promise<ClozeTestListDTO[]>;
   getClozeTestDetail: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
+  deleteClozeTest: (id: string) => Promise<void>;
 };
