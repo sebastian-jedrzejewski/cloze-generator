@@ -9,6 +9,7 @@ class ClozeTest(models.Model):
     title = models.CharField(max_length=128, blank=True, null=True)
     text = models.TextField(max_length=2048)
     gaps = models.JSONField()
+    is_draft = models.BooleanField(default=False)
 
     user = models.ForeignKey(User, related_name="cloze_tests", on_delete=models.CASCADE)
 

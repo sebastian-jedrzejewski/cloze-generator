@@ -18,7 +18,7 @@ class ClozeTestViewSet(
 ):
     permission_classes = [IsAuthenticated]
     serializer_class = ClozeTestDetailSerializer
-    queryset = ClozeTest.objects.all()
+    queryset = ClozeTest.objects.order_by("-created_at")
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
