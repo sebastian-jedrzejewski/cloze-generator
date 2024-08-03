@@ -7,6 +7,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ForNotAuthenticatedRoute from "./ForNotAuthenticatedRoute";
 import RootLayout from "../components/Layout/RootLayout";
 import MainPage from "../pages/MainPage";
+import ClozeTestDetailPage from "../pages/ClozeTests/ClozeTestDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,10 @@ const router = createBrowserRouter([
         <RootLayout />
       </ProtectedRoute>
     ),
-    children: [{ index: true, element: <MainPage /> }],
+    children: [
+      { index: true, element: <MainPage /> },
+      { path: "cloze-tests/:id", element: <ClozeTestDetailPage /> },
+    ],
   },
   {
     path: "login",
