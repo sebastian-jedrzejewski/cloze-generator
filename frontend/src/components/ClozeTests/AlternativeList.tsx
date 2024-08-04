@@ -8,12 +8,17 @@ import {
 
 import { Gap } from "../../config/api/clozeTests/clozeTests.types";
 import COLORS from "../../constants/colors";
+import { ChosenWord } from "./DraftClozeTestDetail";
 
 type Props = {
   alternatives: Gap[];
+  chosenWord: ChosenWord;
+  setChosenWord: (word: ChosenWord | null) => void;
 };
 
 const AlternativeList: React.FC<Props> = (props) => {
+  const { alternatives, chosenWord, setChosenWord } = props;
+
   return (
     <Box
       sx={{
@@ -24,9 +29,36 @@ const AlternativeList: React.FC<Props> = (props) => {
       }}
     >
       <List>
-        {props.alternatives.map((gap) => (
+        {alternatives.map((gap) => (
           <ListItem key={gap.index} disablePadding>
-            <ListItemButton>
+            <ListItemButton
+              onClick={() => {
+                if (chosenWord && chosenWord.gap.index === gap.index) {
+                  if (!chosenWord.hovered) {
+                    setChosenWord(null);
+                  } else {
+                    setChosenWord({ ...chosenWord, hovered: false });
+                  }
+                } else {
+                  setChosenWord({ gap: gap, entity: "ALTERNATIVE" });
+                }
+              }}
+              selected={
+                chosenWord !== null && chosenWord.gap.index === gap.index
+              }
+              onMouseEnter={() => {
+                if (chosenWord && !chosenWord.hovered) return;
+                setChosenWord({
+                  gap: gap,
+                  entity: "ALTERNATIVE",
+                  hovered: true,
+                });
+              }}
+              onMouseLeave={() => {
+                if (chosenWord && !chosenWord.hovered) return;
+                setChosenWord(null);
+              }}
+            >
               <ListItemText>{gap.word}</ListItemText>
             </ListItemButton>
           </ListItem>

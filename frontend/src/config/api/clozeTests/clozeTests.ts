@@ -29,6 +29,24 @@ const clozeTestsApi: ClozeTestApi = {
     );
     return parseDraftClozeTestDetailForFE(response.data);
   },
+  saveClozeTestGaps: async ({ id, gaps }) => {
+    const response = await axios.patch<BackendDraftClozeTestDetailDTO>(
+      `${url}${id}/`,
+      {
+        gaps: {
+          predicted_gaps: gaps.predictedGaps,
+          alternatives: gaps.alternatives,
+        },
+      },
+    );
+    return parseDraftClozeTestDetailForFE(response.data);
+  },
+  saveClozeTest: async (id) => {
+    const response = await axios.post<BackendClozeTestDetailDTO>(
+      `${url}${id}/save_test/`,
+    );
+    return parseClozeTestDetailForFE(response.data);
+  },
   deleteClozeTest: async (id: string) => {
     await axios.delete(`${url}${id}`);
   },

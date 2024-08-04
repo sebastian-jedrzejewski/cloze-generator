@@ -58,11 +58,18 @@ export interface DraftClozeTestDetailDTO extends ClozeTestListDTO {
   gaps: DraftGaps;
 }
 
+export interface SaveGapsData {
+  id: string | undefined;
+  gaps: DraftGaps;
+}
+
 export type ClozeTestApi = {
   getClozeTests: () => Promise<ClozeTestListDTO[]>;
   getClozeTestDetail: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
   getDraftClozeTestDetail: (
     id: string | undefined,
   ) => Promise<DraftClozeTestDetailDTO>;
+  saveClozeTestGaps: (data: SaveGapsData) => Promise<DraftClozeTestDetailDTO>;
+  saveClozeTest: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
   deleteClozeTest: (id: string) => Promise<void>;
 };

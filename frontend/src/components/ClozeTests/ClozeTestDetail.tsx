@@ -52,6 +52,10 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
     setIsDeleteDialogOpen(false);
   };
 
+  if (!Array.isArray(props.test.gaps)) {
+    return null;
+  }
+
   return (
     <Box
       sx={{

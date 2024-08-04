@@ -15,7 +15,7 @@ const DraftClozeTestDetailPage = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["clozeTests", id],
+    queryKey: ["clozeTests", "draft", id],
     queryFn: () => clozeTestsApi.getDraftClozeTestDetail(id),
   });
 
