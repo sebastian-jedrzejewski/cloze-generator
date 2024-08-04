@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from cloze_generator.cloze_tests.models import ClozeTest
-from cloze_generator.model.serializers import TokenSerializer
+from cloze_generator.model.serializers import TokenSerializer, GapsSerializer
 from cloze_generator.model.utils import insert_gaps_into_text
 
 
@@ -30,6 +30,8 @@ class ClozeTestDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_text_with_gaps(self, obj: ClozeTest):
+        if obj.is_draft:
+            return obj.text
         return insert_gaps_into_text(obj.text, obj.gaps)
 
     def get_gap_indicator(self, _: ClozeTest):
@@ -47,3 +49,22 @@ class ClozeTestCreateSerializer(serializers.ModelSerializer):
         gaps_serializer = TokenSerializer(data=value, many=True)
         gaps_serializer.is_valid(raise_exception=True)
         return gaps_serializer.data
+
+
+class ClozeTestUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClozeTest
+        fields = ["id", "gaps"]
+
+    def validate_gaps(self, value):
+        if self.instance and not self.instance.is_draft:
+            raise serializers.ValidationError(
+                "You cannot change gaps of already saved test."
+            )
+
+        gaps_serializer = GapsSerializer(data=value)
+        gaps_serializer.is_valid(raise_exception=True)
+        return gaps_serializer.data
+
+    def to_representation(self, instance):
+        return ClozeTestDetailSerializer(instance, context=self.context).data

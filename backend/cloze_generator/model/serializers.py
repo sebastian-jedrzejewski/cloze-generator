@@ -19,12 +19,12 @@ class TokenSerializer(serializers.Serializer):
 
 
 class GapsSerializer(serializers.Serializer):
-    gaps = TokenSerializer(many=True)
+    predicted_gaps = TokenSerializer(many=True)
     alternatives = TokenSerializer(many=True)
 
 
 class CreateGapsResponseSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=128, allow_blank=True, allow_null=True)
     text = serializers.CharField(max_length=2048)
-    predicted_gaps = GapsSerializer()
+    gaps = GapsSerializer()
     tokenized_text = serializers.ListSerializer(child=serializers.CharField())

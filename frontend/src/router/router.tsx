@@ -8,6 +8,7 @@ import ForNotAuthenticatedRoute from "./ForNotAuthenticatedRoute";
 import RootLayout from "../components/Layout/RootLayout";
 import MainPage from "../pages/MainPage";
 import ClozeTestDetailPage from "../pages/ClozeTests/ClozeTestDetailPage";
+import DraftClozeTestDetailPage from "../pages/ClozeTests/DraftClozeTestDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <MainPage /> },
       { path: "cloze-tests/:id", element: <ClozeTestDetailPage /> },
+      { path: "cloze-tests/drafts/:id", element: <DraftClozeTestDetailPage /> },
     ],
   },
   {
