@@ -30,6 +30,8 @@ class ClozeTestDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_text_with_gaps(self, obj: ClozeTest):
+        if obj.is_draft:
+            return obj.text
         return insert_gaps_into_text(obj.text, obj.gaps)
 
     def get_gap_indicator(self, _: ClozeTest):
