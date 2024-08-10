@@ -21,9 +21,11 @@ from rest_framework.routers import DefaultRouter
 
 from cloze_generator.cloze_tests.views import ClozeTestViewSet
 from cloze_generator.model.views import GenerateGapsAPIView
+from cloze_generator.users.views import UserTaskViewSet
 
 router = DefaultRouter()
 router.register("cloze_tests", ClozeTestViewSet, basename="cloze_tests")
+router.register("tasks", UserTaskViewSet, basename="tasks")
 
 urlpatterns = [
     path("", include(router.urls)),

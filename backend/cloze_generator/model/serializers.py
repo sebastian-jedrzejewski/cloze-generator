@@ -27,4 +27,3 @@ class CreateGapsResponseSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=128, allow_blank=True, allow_null=True)
     text = serializers.CharField(max_length=2048)
     gaps = GapsSerializer()
-    tokenized_text = serializers.ListSerializer(child=serializers.CharField())

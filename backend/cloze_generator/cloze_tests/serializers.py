@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from cloze_generator.cloze_tests.models import ClozeTest
-from cloze_generator.model.serializers import TokenSerializer, GapsSerializer
+from cloze_generator.model.serializers import GapsSerializer
 from cloze_generator.model.utils import insert_gaps_into_text
 
 
@@ -36,19 +36,6 @@ class ClozeTestDetailSerializer(serializers.ModelSerializer):
 
     def get_gap_indicator(self, _: ClozeTest):
         return settings.GAP_INDICATOR
-
-
-class ClozeTestCreateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = ClozeTest
-        fields = ["id", "created_at", "title", "text", "gaps", "user"]
-
-    def validate_gaps(self, value):
-        gaps_serializer = TokenSerializer(data=value, many=True)
-        gaps_serializer.is_valid(raise_exception=True)
-        return gaps_serializer.data
 
 
 class ClozeTestUpdateSerializer(serializers.ModelSerializer):

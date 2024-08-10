@@ -7,9 +7,11 @@ from cloze_generator.cloze_tests.models import ClozeTest
 from cloze_generator.cloze_tests.serializers import (
     ClozeTestDetailSerializer,
     ClozeTestListSerializer,
-    ClozeTestCreateSerializer,
     ClozeTestUpdateSerializer,
 )
+from cloze_generator.model.serializers import CreateGapsRequestSerializer
+from cloze_generator.model.tasks import predict_gaps_for_text
+from cloze_generator.users.models import UserTask
 
 
 class ClozeTestViewSet(
@@ -31,10 +33,26 @@ class ClozeTestViewSet(
         if self.action == "list":
             return ClozeTestListSerializer
         elif self.action == "create":
-            return ClozeTestCreateSerializer
+            return CreateGapsRequestSerializer
         elif self.action in ("update", "partial_update"):
             return ClozeTestUpdateSerializer
         return self.serializer_class
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        task = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            data={"task_id": task.id}, status=status.HTTP_201_CREATED, headers=headers
+        )
+
+    def perform_create(self, serializer):
+        result = predict_gaps_for_text.delay(
+            test_data=serializer.data, user_id=self.request.user.id
+        )
+        UserTask.objects.create(user=self.request.user, task_id=result.id)
+        return result
 
     @action(detail=True, methods=["POST"])
     def save_test(self, request, *args, **kwargs):
