@@ -1,5 +1,4 @@
 import os
-import nltk
 
 from django.apps import AppConfig
 from django.conf import settings
@@ -14,18 +13,14 @@ class ModelConfig(AppConfig):
     tokenizer = None
     model = None
     pipe = None
-    tweet_tokenizer = None
 
     def ready(self):
         model_path = os.path.join(
             settings.BASE_DIR, "cloze_generator", "model", "electra_model.bin"
         )
 
-        nltk.download("punkt")
-
         ModelConfig.tokenizer = ElectraTokenizerFast.from_pretrained(
             "google/electra-base-discriminator"
         )
         ModelConfig.model = load_model(model_path)
         ModelConfig.pipe = post_processing(model_path)
-        ModelConfig.tweet_tokenizer = nltk.tokenize.TweetTokenizer()

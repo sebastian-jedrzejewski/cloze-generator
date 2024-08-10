@@ -17,6 +17,10 @@ services:
       - ./backend/.env
     depends_on:
       - db
+      - redis
+      - celery
+    networks:
+      - cloze-generator-network
   db:
     image: postgres:15.4-alpine
     env_file:
@@ -25,6 +29,39 @@ services:
       - data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - cloze-generator-network
+  redis:
+    image: redis:7.0.5-alpine
+    env_file:
+      - ./backend/.env
+    volumes:
+      - redis:/data
+    networks:
+      - cloze-generator-network
+  celery_beat:
+    build: ./backend
+    command: celery -A cloze_generator beat --pool threads -l debug
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - redis
+    networks:
+      - cloze-generator-network
+  celery:
+    build: ./backend
+    command: celery -A cloze_generator worker --pool threads -l debug
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - celery_beat
+    networks:
+      - cloze-generator-network
   frontend:
     build: ./frontend
     stdin_open: true
@@ -38,7 +75,12 @@ services:
       CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - backend
+    networks:
+      - cloze-generator-network
 
 volumes:
   data:
   node_modules:
+  redis:
+networks:
+  cloze-generator-network:

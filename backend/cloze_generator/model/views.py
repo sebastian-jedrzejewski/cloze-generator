@@ -18,12 +18,11 @@ class GenerateGapsAPIView(APIView):
         gaps, alternatives = ModelConfig.pipe(data["text"], n_gaps=data["n_gaps"])
         response_data = {
             "title": data.get("title", ""),
-            "predicted_gaps": {
-                "gaps": gaps,
+            "gaps": {
+                "predicted_gaps": gaps,
                 "alternatives": alternatives,
             },
             "text": data["text"],
-            "tokenized_text": ModelConfig.tweet_tokenizer.tokenize(data["text"]),
         }
         response_serializer = serializers.CreateGapsResponseSerializer(
             data=response_data
