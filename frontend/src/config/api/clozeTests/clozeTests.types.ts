@@ -63,6 +63,34 @@ export interface SaveGapsData {
   gaps: DraftGaps;
 }
 
+export interface BackendCreateClozeTestDTO {
+  title?: string;
+  text: string;
+  n_gaps: number;
+}
+
+export interface CreateClozeTestDTO {
+  title?: string;
+  text: string;
+  numberOfGaps: number;
+}
+
+export interface BackendCreateClozeTestResponseDTO {
+  task_id: string;
+}
+
+export interface CreateClozeTestResponseDTO {
+  taskId: string;
+}
+
+export interface TaskStatus {
+  task_id: string;
+  task_info: {
+    state: string;
+    result: number;
+  };
+}
+
 export type ClozeTestApi = {
   getClozeTests: () => Promise<ClozeTestListDTO[]>;
   getClozeTestDetail: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
@@ -71,5 +99,8 @@ export type ClozeTestApi = {
   ) => Promise<DraftClozeTestDetailDTO>;
   saveClozeTestGaps: (data: SaveGapsData) => Promise<DraftClozeTestDetailDTO>;
   saveClozeTest: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
+  createClozeTest: (
+    data: CreateClozeTestDTO,
+  ) => Promise<CreateClozeTestResponseDTO>;
   deleteClozeTest: (id: string) => Promise<void>;
 };

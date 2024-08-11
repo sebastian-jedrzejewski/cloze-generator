@@ -5,10 +5,13 @@ import {
   BackendClozeTestDetailDTO,
   ClozeTestApi,
   BackendDraftClozeTestDetailDTO,
+  BackendCreateClozeTestResponseDTO,
 } from "./clozeTests.types";
 import {
   parseClozeTestDetailForFE,
   parseClozeTestListForFE,
+  parseCreateClozeTestDataForBE,
+  parseCreateClozeTestResponseDataForFE,
   parseDraftClozeTestDetailForFE,
 } from "./clozeTests.parsers";
 
@@ -46,6 +49,14 @@ const clozeTestsApi: ClozeTestApi = {
       `${url}${id}/save_test/`,
     );
     return parseClozeTestDetailForFE(response.data);
+  },
+  createClozeTest: async (data) => {
+    const createData = parseCreateClozeTestDataForBE(data);
+    const response = await axios.post<BackendCreateClozeTestResponseDTO>(
+      url,
+      createData,
+    );
+    return parseCreateClozeTestResponseDataForFE(response.data);
   },
   deleteClozeTest: async (id: string) => {
     await axios.delete(`${url}${id}`);

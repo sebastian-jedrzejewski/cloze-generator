@@ -4,6 +4,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 import { Gap } from "../../config/api/clozeTests/clozeTests.types";
@@ -29,6 +30,9 @@ const AlternativeList: React.FC<Props> = (props) => {
       }}
     >
       <List>
+        {alternatives.length === 0 && (
+          <Typography>No alternatives available</Typography>
+        )}
         {alternatives.map((gap) => (
           <ListItem key={gap.index} disablePadding>
             <ListItemButton
