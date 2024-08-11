@@ -1,5 +1,6 @@
 import {
   FormControl,
+  InputBaseComponentProps,
   InputLabel,
   OutlinedInput,
   SxProps,
@@ -25,6 +26,7 @@ type Props = {
   defaultOutlineColor?: string;
   hoverOutlineColor?: string;
   focusedOutlineColor?: string;
+  inputProps?: InputBaseComponentProps;
 };
 
 const Input: React.FC<Props> = (props) => {
@@ -44,6 +46,7 @@ const Input: React.FC<Props> = (props) => {
     defaultOutlineColor,
     hoverOutlineColor,
     focusedOutlineColor,
+    inputProps,
   } = props;
   const { touched, errors } = formik;
 
@@ -71,7 +74,11 @@ const Input: React.FC<Props> = (props) => {
         {label}
       </InputLabel>
       <OutlinedInput
-        inputProps={{ maxLength }}
+        inputProps={{
+          maxLength,
+          style: { textAlign: "justify" },
+          ...inputProps,
+        }}
         id={id}
         label={label}
         type={type || "text"}

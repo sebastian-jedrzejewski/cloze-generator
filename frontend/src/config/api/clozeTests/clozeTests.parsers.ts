@@ -1,9 +1,13 @@
 import {
   BackendClozeTestDetailDTO,
   BackendClozeTestListDTO,
+  BackendCreateClozeTestDTO,
+  BackendCreateClozeTestResponseDTO,
   BackendDraftClozeTestDetailDTO,
   ClozeTestDetailDTO,
   ClozeTestListDTO,
+  CreateClozeTestDTO,
+  CreateClozeTestResponseDTO,
   DraftClozeTestDetailDTO,
 } from "./clozeTests.types";
 
@@ -62,5 +66,23 @@ export const parseDraftClozeTestDetailForFE = (
       predictedGaps: data.gaps.predicted_gaps,
       alternatives: data.gaps.alternatives,
     },
+  };
+};
+
+export const parseCreateClozeTestDataForBE = (
+  data: CreateClozeTestDTO,
+): BackendCreateClozeTestDTO => {
+  return {
+    title: data.title,
+    text: data.text,
+    n_gaps: data.numberOfGaps,
+  };
+};
+
+export const parseCreateClozeTestResponseDataForFE = (
+  data: BackendCreateClozeTestResponseDTO,
+): CreateClozeTestResponseDTO => {
+  return {
+    taskId: data.task_id,
   };
 };

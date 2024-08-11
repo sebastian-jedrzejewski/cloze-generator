@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -43,7 +45,6 @@ const SidebarDrawer: React.FC<Props> = (props) => {
   });
 
   const navigateToTestDetails = (test: ClozeTestListDTO) => {
-    console.log(test);
     if (test.isDraft) {
       navigate(`/cloze-tests/drafts/${test.id}`);
     } else {
@@ -66,37 +67,50 @@ const SidebarDrawer: React.FC<Props> = (props) => {
         {isError && <ErrorMessage message={MESSAGES.SOMETHING_WENT_WRONG} />}
         {isLoading && <LoadingSpinner />}
         {!isLoading && (
-          <List sx={{ color: COLORS.black200 }}>
-            {clozeTests?.length === 0 && (
-              <Typography sx={{ textAlign: "center", mt: "10px" }}>
-                You don't have any tests.
-              </Typography>
-            )}
-            {clozeTests?.map((test) => (
-              <ListItem
-                key={test.id}
-                sx={{
-                  p: 0,
-                  bgcolor:
-                    id && test.id == parseInt(id) ? COLORS.gray500 : "inherit",
-                }}
-              >
-                <Tooltip
-                  title={test.title?.length > 20 ? test.title : ""}
-                  placement="right"
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              color="secondary"
+              variant="contained"
+              sx={{ my: "1rem" }}
+              onClick={() => navigate("/cloze-tests/generate")}
+            >
+              Create Test
+            </Button>
+            <Divider />
+            <List sx={{ color: COLORS.black200 }}>
+              {clozeTests?.length === 0 && (
+                <Typography sx={{ textAlign: "center", mt: "10px" }}>
+                  You don't have any tests.
+                </Typography>
+              )}
+              {clozeTests?.map((test) => (
+                <ListItem
+                  key={test.id}
+                  sx={{
+                    p: 0,
+                    bgcolor:
+                      id && test.id == parseInt(id)
+                        ? COLORS.gray500
+                        : "inherit",
+                  }}
                 >
-                  <ListItemButton onClick={() => navigateToTestDetails(test)}>
-                    <ListItemIcon>
-                      {test.isDraft ? <DraftsIcon /> : <TextFieldsIcon />}
-                    </ListItemIcon>
-                    <ListItemText>
-                      {test.shortTitle} {test.isDraft ? "(Draft)" : ""}
-                    </ListItemText>
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
-            ))}
-          </List>
+                  <Tooltip
+                    title={test.title?.length > 20 ? test.title : ""}
+                    placement="right"
+                  >
+                    <ListItemButton onClick={() => navigateToTestDetails(test)}>
+                      <ListItemIcon>
+                        {test.isDraft ? <DraftsIcon /> : <TextFieldsIcon />}
+                      </ListItemIcon>
+                      <ListItemText>
+                        {test.shortTitle} {test.isDraft ? "(Draft)" : ""}
+                      </ListItemText>
+                    </ListItemButton>
+                  </Tooltip>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         )}
       </Box>
     </>

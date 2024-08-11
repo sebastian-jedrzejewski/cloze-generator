@@ -36,7 +36,7 @@ const MainPage = () => {
           variant="contained"
           color="secondary"
           size="large"
-          onClick={() => navigate("/tests/generate")}
+          onClick={() => navigate("/cloze-tests/generate")}
         >
           Generate Open Cloze Test
         </Button>
