@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
@@ -26,6 +26,8 @@ import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { queryClient } from "../../config/api";
+import { useReactToPrint } from "react-to-print";
+import ClozeTestToPrint from "./ClozeTestToPrint";
 
 type Props = {
   test: ClozeTestDetailDTO;
@@ -34,6 +36,7 @@ type Props = {
 const ClozeTestDetail: React.FC<Props> = (props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const contentToPrint = useRef(null);
 
   const {
     mutate: deleteTest,
@@ -45,6 +48,14 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
       queryClient.invalidateQueries({ queryKey: ["clozeTests"] });
       navigate("/");
     },
+  });
+
+  const handlePrint = useReactToPrint({
+    documentTitle:
+      props.test.title?.replaceAll(" ", "-") ||
+      props.test.shortTitle?.replaceAll(" ", "-"),
+    removeAfterPrint: true,
+    content: () => contentToPrint.current,
   });
 
   const deleteTestHandler = () => {
@@ -78,7 +89,11 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
             columnGap: 2,
           }}
         >
-          <Button color="secondary" startIcon={<PrintIcon />}>
+          <Button
+            color="secondary"
+            startIcon={<PrintIcon />}
+            onClick={handlePrint}
+          >
             Print
           </Button>
           <Button
@@ -125,6 +140,7 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
           </AccordionDetails>
         </Accordion>
       </Box>
+      <ClozeTestToPrint ref={contentToPrint} test={props.test} />
       <AlertDialog
         agreeButton={
           <Button color="error" variant="contained" onClick={deleteTestHandler}>

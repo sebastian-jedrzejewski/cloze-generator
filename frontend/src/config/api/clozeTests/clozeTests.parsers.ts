@@ -29,11 +29,13 @@ const replaceBlanks = (text: string, gapIndicator: string) => {
     gapIndicator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
     "g",
   );
-  return text.replace(
-    regex,
-    () =>
-      `<span style="color: #9C27B0; font-weight: bold">(${count++}) ........</span>`,
-  );
+  return text
+    .replace(
+      regex,
+      () =>
+        `<span style="color: #9C27B0; font-weight: bold">(${count++}) ........</span>`,
+    )
+    .replace(new RegExp("\\n", "g"), "<br/>");
 };
 
 export const parseClozeTestDetailForFE = (
