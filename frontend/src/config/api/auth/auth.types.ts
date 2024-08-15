@@ -18,8 +18,14 @@ export type RegisterResponse = {
   email: string;
 };
 
+export type MeResponse = {
+  id: number;
+  email: string;
+};
+
 export type AuthApi = {
   login: (credentials: Credentials) => Promise<LoginResponse>;
   register: (credentials: Credentials) => Promise<RegisterResponse>;
   refreshToken: () => Promise<LoginResponse>;
+  getUserDetails: () => Promise<MeResponse>;
 };

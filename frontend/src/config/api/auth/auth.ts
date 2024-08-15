@@ -3,6 +3,7 @@ import {
   AuthApi,
   BackendLoginResponse,
   Credentials,
+  MeResponse,
   RegisterResponse,
 } from "./auth.types";
 import { customFetch } from "../../axios";
@@ -12,6 +13,7 @@ import { parseLoginResponseForFE } from "./auth.parsers";
 const loginUrl = "/auth/jwt/create/";
 const registerUrl = "/auth/users/";
 const refreshTokenUrl = "/auth/jwt/refresh/";
+const meUrl = "/auth/users/me/";
 
 export const authApi: AuthApi = {
   login: async (credentials: Credentials) => {
@@ -36,5 +38,9 @@ export const authApi: AuthApi = {
       },
     );
     return parseLoginResponseForFE(response.data);
+  },
+  getUserDetails: async () => {
+    const response = await axios.get<MeResponse>(meUrl);
+    return response.data;
   },
 };
