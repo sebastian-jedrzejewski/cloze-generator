@@ -4,7 +4,7 @@ from cloze_generator.model.constants import label2id
 
 
 class CreateGapsRequestSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=128, required=False)
+    title = serializers.CharField(max_length=128, required=False, allow_blank=True)
     text = serializers.CharField(max_length=2048)
     n_gaps = serializers.IntegerField(min_value=1, max_value=16)
 
