@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -13,10 +14,16 @@ import logo from "../../assets/vite.svg";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../store/AuthContext/AuthContext";
 import MenuAvatar from "../UI/MenuAvatar";
+import { authApi } from "../../config/api/auth/auth";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout } = useContext(AuthContext);
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["me"],
+    queryFn: authApi.getUserDetails,
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -70,7 +77,11 @@ const Navbar = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}></Box>
-          <MenuAvatar />
+          {isLoading ? (
+            <LoadingSpinner boxSx={{ m: 0 }} color="error" />
+          ) : (
+            <MenuAvatar user={user} />
+          )}
           <Button
             variant="contained"
             color="secondary"

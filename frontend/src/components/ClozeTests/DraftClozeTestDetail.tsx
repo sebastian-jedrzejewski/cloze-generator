@@ -21,6 +21,7 @@ import LoadingSpinner from "../UI/LoadingSpinner";
 import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import AlertDialog from "../Layout/AlertDialog";
+import HelpModal from "../UI/HelpModal";
 
 export type ChosenWord = {
   gap: Gap;
@@ -38,6 +39,7 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
   const [remainingAlternatives, setRemainingAlternatives] = useState<Gap[]>([]);
   const [chosenWord, setChosenWord] = useState<ChosenWord>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const { mutate: saveGaps } = useMutation({
     mutationFn: clozeTestsApi.saveClozeTestGaps,
@@ -140,7 +142,11 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
         }}
       >
         <Box>
-          <Button color="info" variant="text">
+          <Button
+            color="info"
+            variant="text"
+            onClick={() => setIsHelpModalOpen(true)}
+          >
             How it works
           </Button>
         </Box>
@@ -232,6 +238,12 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
         isOpen={isDeleteDialogOpen}
         title="Delete Open Cloze Test (Draft)"
         contentText="Are you sure you want to delete this open cloze test draft? This action is irreversible."
+      />
+      <HelpModal
+        open={isHelpModalOpen}
+        handleClose={() => {
+          setIsHelpModalOpen(false);
+        }}
       />
     </Box>
   );
