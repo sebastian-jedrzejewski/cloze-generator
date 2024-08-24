@@ -1,3 +1,4 @@
+import uuid
 from celery.result import AsyncResult
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -17,8 +18,14 @@ class User(AbstractUser):
 
 
 class UserTask(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+
     user = models.ForeignKey(
-        "users.User", related_name="tasks", on_delete=models.CASCADE
+        "users.User",
+        related_name="tasks",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
     task_id = models.UUIDField(unique=True)
 
