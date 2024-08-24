@@ -1,12 +1,7 @@
 import LoginForm from "../../components/Forms/auth/LoginForm";
-import FullPageWrapper from "../../components/UI/FullPageWrapper";
 
 const LoginPage = () => {
-  return (
-    <FullPageWrapper>
-      <LoginForm />
-    </FullPageWrapper>
-  );
+  return <LoginForm />;
 };
 
 export default LoginPage;

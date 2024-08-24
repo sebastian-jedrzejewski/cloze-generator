@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Box,
   Button,
   List,
@@ -13,6 +14,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useReactToPrint } from "react-to-print";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PrintIcon from "@mui/icons-material/Print";
@@ -26,14 +28,15 @@ import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { queryClient } from "../../config/api";
-import { useReactToPrint } from "react-to-print";
 import ClozeTestToPrint from "./ClozeTestToPrint";
+import { AuthContext } from "../../store/AuthContext/AuthContext";
 
 type Props = {
   test: ClozeTestDetailDTO;
 };
 
 const ClozeTestDetail: React.FC<Props> = (props) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
   const contentToPrint = useRef(null);
@@ -140,7 +143,15 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
           </AccordionDetails>
         </Accordion>
       </Box>
-      <ClozeTestToPrint ref={contentToPrint} test={props.test} />
+      {!isAuthenticated && (
+        <Alert severity="warning" sx={{ mt: "1.5rem" }}>
+          This test will be deleted after some time. Make sure you saved it in a
+          safe place or login to save tests permanently.
+        </Alert>
+      )}
+      <Box sx={{ display: "none" }}>
+        <ClozeTestToPrint ref={contentToPrint} test={props.test} />
+      </Box>
       <AlertDialog
         agreeButton={
           <Button color="error" variant="contained" onClick={deleteTestHandler}>

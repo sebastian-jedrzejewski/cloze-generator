@@ -2,6 +2,7 @@ from typing import Dict, Any, Optional
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.utils import timezone
 
 from cloze_generator.cloze_tests.models import ClozeTest
 from cloze_generator.model.apps import ModelConfig
@@ -11,11 +12,10 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def predict_gaps_for_text(test_data: Dict[str, Any], user_id: int) -> Optional[str]:
+def predict_gaps_for_text(
+    test_data: Dict[str, Any], user_id: Optional[int]
+) -> Optional[str]:
     user = User.objects.filter(id=user_id).first()
-    if not user:
-        logger.error(f"User with id {user_id} not found")
-        return
 
     gaps, alternatives = ModelConfig.pipe(test_data["text"], n_gaps=test_data["n_gaps"])
     test = ClozeTest.objects.create(
@@ -27,5 +27,6 @@ def predict_gaps_for_text(test_data: Dict[str, Any], user_id: int) -> Optional[s
         },
         is_draft=True,
         user=user,
+        expiry_time=timezone.now() + timezone.timedelta(hours=2) if not user else None,
     )
     return test.id

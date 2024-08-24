@@ -41,7 +41,7 @@ services:
       - cloze-generator-network
   celery_beat:
     build: ./backend
-    command: celery -A cloze_generator beat --pool threads -l info
+    command: celery -A cloze_generator beat -l info
     env_file:
       - ./backend/.env
     volumes:

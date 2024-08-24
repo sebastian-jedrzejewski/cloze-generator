@@ -1,17 +1,27 @@
+import uuid
 from django.db import models
 
 from cloze_generator.users.models import User
 
 
 class ClozeTest(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     title = models.CharField(max_length=128, blank=True, null=True)
     text = models.TextField(max_length=2048)
     gaps = models.JSONField()
     is_draft = models.BooleanField(default=False)
+    expiry_time = models.DateTimeField(blank=True, null=True)
 
-    user = models.ForeignKey(User, related_name="cloze_tests", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        related_name="cloze_tests",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
 
     @property
     def short_title(self) -> str:

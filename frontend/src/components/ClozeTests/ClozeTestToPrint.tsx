@@ -10,7 +10,7 @@ type Props = {
 
 const ClozeTestToPrint = React.forwardRef((props: Props, ref) => {
   return (
-    <Box ref={ref} sx={{ display: "none", displayPrint: "block", p: 4 }}>
+    <Box ref={ref} sx={{ p: 4 }}>
       <Typography sx={{ mb: "2rem" }}>
         For questions {`1-${props.test.gaps.length}`}, read the text below and
         think of the word which best fits each gap. Use only{" "}

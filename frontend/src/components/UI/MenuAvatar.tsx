@@ -1,6 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, Tooltip } from "@mui/material";
-import { MeResponse } from "../../config/api/auth/auth.types";
+
 import COLORS from "../../constants/colors";
+import { authApi } from "../../config/api/auth/auth";
+import LoadingSpinner from "./LoadingSpinner";
 
 const stringToColor = (string: string) => {
   let hash = 0;
@@ -56,14 +59,23 @@ const stringAvatar = (name: string) => {
   };
 };
 
-const MenuAvatar = (props: { user: MeResponse | undefined }) => {
-  if (!props.user) {
+const MenuAvatar = () => {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["me"],
+    queryFn: authApi.getUserDetails,
+  });
+
+  if (isLoading) {
+    return <LoadingSpinner boxSx={{ m: 0 }} color="error" />;
+  }
+
+  if (!user) {
     return null;
   }
 
   return (
-    <Tooltip title={props.user.email}>
-      <Avatar {...stringAvatar(props.user.email)} />
+    <Tooltip title={user.email}>
+      <Avatar {...stringAvatar(user.email)} />
     </Tooltip>
   );
 };

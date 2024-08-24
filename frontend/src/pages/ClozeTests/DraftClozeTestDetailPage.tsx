@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 
 import clozeTestsApi from "../../config/api/clozeTests/clozeTests";
 import ErrorMessage from "../../components/UI/ErrorMessage";
@@ -14,6 +15,7 @@ const DraftClozeTestDetailPage = () => {
     data: test,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["clozeTests", "draft", id],
     queryFn: () => clozeTestsApi.getDraftClozeTestDetail(id),
@@ -22,7 +24,23 @@ const DraftClozeTestDetailPage = () => {
   let content = null;
 
   if (isError) {
-    content = <ErrorMessage message={MESSAGES.SOMETHING_WENT_WRONG} />;
+    if (isAxiosError(error) && error.response?.status === 404) {
+      content = (
+        <Box
+          sx={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "red",
+          }}
+        >
+          <Typography variant="h4">The test wasn't found!</Typography>
+        </Box>
+      );
+    } else {
+      content = <ErrorMessage message={MESSAGES.SOMETHING_WENT_WRONG} />;
+    }
   }
 
   if (isLoading) {

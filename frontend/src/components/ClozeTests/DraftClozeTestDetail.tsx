@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
@@ -22,6 +22,7 @@ import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import AlertDialog from "../Layout/AlertDialog";
 import HelpModal from "../UI/HelpModal";
+import { AuthContext } from "../../store/AuthContext/AuthContext";
 
 export type ChosenWord = {
   gap: Gap;
@@ -34,6 +35,7 @@ type Props = {
 };
 
 const DraftClozeTestDetail: React.FC<Props> = (props) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [chosenGaps, setChosenGaps] = useState<Gap[]>([]);
   const [remainingAlternatives, setRemainingAlternatives] = useState<Gap[]>([]);
@@ -221,7 +223,7 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
           startIcon={<SaveIcon />}
           onClick={saveTestHandler}
         >
-          Save test
+          {isAuthenticated ? "Save test" : "Submit test"}
         </Button>
       )}
       {isSavingError && (

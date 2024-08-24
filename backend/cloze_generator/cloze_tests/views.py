@@ -1,6 +1,7 @@
+from django.db.models import Q
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from cloze_generator.cloze_tests.models import ClozeTest
@@ -22,12 +23,22 @@ class ClozeTestViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ClozeTestDetailSerializer
     queryset = ClozeTest.objects.order_by("-created_at")
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            if self.action == "list":
+                return super().get_queryset().filter(user=self.request.user)
+            return (
+                super()
+                .get_queryset()
+                .filter(Q(user=self.request.user) | Q(user__isnull=True))
+            )
+        if self.action != "list":
+            return super().get_queryset().filter(user__isnull=True)
+        return ClozeTest.objects.none()
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -48,11 +59,13 @@ class ClozeTestViewSet(
         )
 
     def perform_create(self, serializer):
+        user = self.request.user if self.request.user.is_authenticated else None
         result = predict_gaps_for_text.delay(
-            test_data=serializer.data, user_id=self.request.user.id
+            test_data=serializer.data,
+            user_id=(user.id if user else None),
         )
-        UserTask.objects.create(user=self.request.user, task_id=result.id)
-        return result
+        task = UserTask.objects.create(user=user, task_id=result.id)
+        return task
 
     @action(detail=True, methods=["POST"])
     def save_test(self, request, *args, **kwargs):
