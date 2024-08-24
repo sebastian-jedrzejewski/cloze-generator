@@ -1,5 +1,5 @@
 export interface BackendClozeTestListDTO {
-  id: number;
+  id: string;
   created_at: string;
   title: string;
   short_title: string;
@@ -7,7 +7,7 @@ export interface BackendClozeTestListDTO {
 }
 
 export interface ClozeTestListDTO {
-  id: number;
+  id: string;
   createdAt: Date;
   title: string;
   shortTitle: string;
@@ -87,7 +87,7 @@ export interface TaskStatus {
   task_id: string;
   task_info: {
     state: string;
-    result: number;
+    result: string;
   };
 }
 

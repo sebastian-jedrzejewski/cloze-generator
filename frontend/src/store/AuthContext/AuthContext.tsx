@@ -6,6 +6,7 @@ import { AuthContextType, AuthMutationData } from "./AuthContext.types";
 import { authApi } from "../../config/api/auth/auth";
 import AccessTokenService from "./AccessTokenService";
 import RefreshTokenService from "./RefreshTokenService";
+import { queryClient } from "../../config/api";
 
 const initialCredentialsData = {
   error: null,
@@ -50,6 +51,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
       AccessTokenService.storeToken(data.accessToken);
       RefreshTokenService.storeToken(data.refreshToken);
       setIsAuthenticated(true);
+      queryClient.invalidateQueries({ queryKey: ["clozeTests"] });
     },
   });
   const {
@@ -109,6 +111,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
     AccessTokenService.deleteToken();
     RefreshTokenService.deleteToken();
     setIsAuthenticated(false);
+    queryClient.invalidateQueries({ queryKey: ["clozeTests"] });
   };
 
   const resetLoginQueryData = () => {

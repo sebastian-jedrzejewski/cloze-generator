@@ -3,25 +3,22 @@ import { Box } from "@mui/material";
 
 import AuthCard from "../../components/UI/AuthCard";
 import COLORS from "../../constants/colors";
-import FullPageWrapper from "../../components/UI/FullPageWrapper";
 
 const AccountCreatedPage = () => {
   return (
-    <FullPageWrapper>
-      <AuthCard>
-        <Box
-          sx={{
-            my: "3.5rem",
-            px: "0.2rem",
-            fontSize: "1.4rem",
-            color: COLORS.black200,
-          }}
-        >
-          Your account has been created successfully. Now you can{" "}
-          <Link to="/login">login</Link>
-        </Box>
-      </AuthCard>
-    </FullPageWrapper>
+    <AuthCard>
+      <Box
+        sx={{
+          my: "3.5rem",
+          px: "0.2rem",
+          fontSize: "1.4rem",
+          color: COLORS.black200,
+        }}
+      >
+        Your account has been created successfully. Now you can{" "}
+        <Link to="/login">login</Link>
+      </Box>
+    </AuthCard>
   );
 };
 

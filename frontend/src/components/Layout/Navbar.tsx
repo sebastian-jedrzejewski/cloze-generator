@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -11,22 +11,21 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SidebarDrawer from "./SidebarDrawer";
 
 import logo from "../../assets/vite.svg";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../../store/AuthContext/AuthContext";
 import MenuAvatar from "../UI/MenuAvatar";
-import { authApi } from "../../config/api/auth/auth";
-import LoadingSpinner from "../UI/LoadingSpinner";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { logout } = useContext(AuthContext);
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["me"],
-    queryFn: authApi.getUserDetails,
-  });
+  const { isAuthenticated, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const logoutHandler = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -77,19 +76,38 @@ const Navbar = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}></Box>
-          {isLoading ? (
-            <LoadingSpinner boxSx={{ m: 0 }} color="error" />
-          ) : (
-            <MenuAvatar user={user} />
+          {isAuthenticated && (
+            <>
+              <MenuAvatar />
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={logoutHandler}
+                sx={{ ml: "15px" }}
+              >
+                Logout
+              </Button>
+            </>
           )}
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={logout}
-            sx={{ ml: "15px" }}
-          >
-            Logout
-          </Button>
+          {!isAuthenticated && (
+            <>
+              <Button
+                variant="contained"
+                color="info"
+                sx={{ mr: "15px" }}
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <SidebarDrawer isOpen={mobileOpen} toggleHandler={handleDrawerToggle} />

@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import DraftsIcon from "@mui/icons-material/Drafts";
@@ -24,6 +24,7 @@ import clozeTestsApi from "../../config/api/clozeTests/clozeTests";
 import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import { ClozeTestListDTO } from "../../config/api/clozeTests/clozeTests.types";
+import { AuthContext } from "../../store/AuthContext/AuthContext";
 
 const drawerWidth = { xs: 240, md: 300 };
 
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const SidebarDrawer: React.FC<Props> = (props) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -78,9 +80,14 @@ const SidebarDrawer: React.FC<Props> = (props) => {
             </Button>
             <Divider />
             <List sx={{ color: COLORS.black200 }}>
-              {clozeTests?.length === 0 && (
+              {isAuthenticated && clozeTests?.length === 0 && (
                 <Typography sx={{ textAlign: "center", mt: "10px" }}>
                   You don't have any tests.
+                </Typography>
+              )}
+              {!isAuthenticated && (
+                <Typography sx={{ textAlign: "center", mt: "10px" }}>
+                  To save your test on your account you have to login.
                 </Typography>
               )}
               {clozeTests?.map((test) => (
@@ -88,10 +95,7 @@ const SidebarDrawer: React.FC<Props> = (props) => {
                   key={test.id}
                   sx={{
                     p: 0,
-                    bgcolor:
-                      id && test.id == parseInt(id)
-                        ? COLORS.gray500
-                        : "inherit",
+                    bgcolor: id && test.id == id ? COLORS.gray500 : "inherit",
                   }}
                 >
                   <Tooltip

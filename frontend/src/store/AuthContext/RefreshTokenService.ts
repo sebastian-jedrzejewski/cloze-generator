@@ -12,7 +12,7 @@ class RefreshTokenService {
     const cookies = document.cookie.split(";");
     for (const cookie of cookies) {
       const [name, value] = cookie.trim().split("=");
-      if (name === this.REFRESH_TOKEN_ITEM_NAME) {
+      if (name === this.REFRESH_TOKEN_ITEM_NAME && value) {
         return value;
       }
     }
