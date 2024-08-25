@@ -1,6 +1,9 @@
+import uuid
 from django.db.models import Q
+from django.utils import timezone
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -76,3 +79,32 @@ class ClozeTestViewSet(
         return Response(
             data=self.get_serializer(instance=test).data, status=status.HTTP_200_OK
         )
+
+    @action(detail=True, methods=["POST"])
+    def publish(self, request, *args, **kwargs):
+        test = self.get_object()
+        if test.is_draft:
+            return Response(
+                data={"Cannot publish the test which is a draft!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not test.publish_uuid:
+            test.publish_uuid = uuid.uuid4()
+            if test.expiry_time:
+                test.expiry_time = timezone.now() + timezone.timedelta(hours=1)
+        test.save(update_fields=["publish_uuid", "expiry_time"])
+        return Response(
+            data={"publish_uuid": test.publish_uuid}, status=status.HTTP_200_OK
+        )
+
+    @action(detail=False, methods=["GET"])
+    def shared_test(self, request, *args, **kwargs):
+        queryset = ClozeTest.objects.filter(is_draft=False).all()
+        publish_uuid = request.query_params.get("publish_uuid", None)
+        if not publish_uuid:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        test = get_object_or_404(queryset, publish_uuid=publish_uuid)
+        serializer = self.get_serializer(instance=test)
+        response_data = serializer.data
+        response_data.pop("id", None)
+        return Response(data=response_data, status=status.HTTP_200_OK)

@@ -24,6 +24,7 @@ class ClozeTestDetailSerializer(serializers.ModelSerializer):
             "is_draft",
             "title",
             "short_title",
+            "publish_uuid",
             "text_with_gaps",
             "gap_indicator",
             "gaps",
