@@ -34,13 +34,16 @@ export interface DraftGaps {
 }
 
 export interface BackendClozeTestDetailDTO extends BackendClozeTestListDTO {
+  publish_uuid: string;
   text_with_gaps: string;
   gap_indicator: string;
   gaps: Gap[];
 }
 
 export interface ClozeTestDetailDTO extends ClozeTestListDTO {
+  publishUuid: string;
   textWithGaps: string;
+  rawTextWithGaps: string;
   gapIndicator: string;
   gaps: Gap[];
 }
@@ -97,8 +100,12 @@ export type ClozeTestApi = {
   getDraftClozeTestDetail: (
     id: string | undefined,
   ) => Promise<DraftClozeTestDetailDTO>;
+  getSharedTestDetails: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
   saveClozeTestGaps: (data: SaveGapsData) => Promise<DraftClozeTestDetailDTO>;
   saveClozeTest: (id: string | undefined) => Promise<ClozeTestDetailDTO>;
+  publishClozeTest: (
+    id: string | undefined,
+  ) => Promise<{ publishUuid: string }>;
   createClozeTest: (
     data: CreateClozeTestDTO,
   ) => Promise<CreateClozeTestResponseDTO>;

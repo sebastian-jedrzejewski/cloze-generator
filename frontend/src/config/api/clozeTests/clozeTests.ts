@@ -32,6 +32,13 @@ const clozeTestsApi: ClozeTestApi = {
     );
     return parseDraftClozeTestDetailForFE(response.data);
   },
+  getSharedTestDetails: async (id: string | undefined) => {
+    const response = await axios.get<BackendClozeTestDetailDTO>(
+      `${url}shared_test`,
+      { params: { publish_uuid: id } },
+    );
+    return parseClozeTestDetailForFE(response.data);
+  },
   saveClozeTestGaps: async ({ id, gaps }) => {
     const response = await axios.patch<BackendDraftClozeTestDetailDTO>(
       `${url}${id}/`,
@@ -49,6 +56,12 @@ const clozeTestsApi: ClozeTestApi = {
       `${url}${id}/save_test/`,
     );
     return parseClozeTestDetailForFE(response.data);
+  },
+  publishClozeTest: async (id) => {
+    const response = await axios.post<{ publish_uuid: string }>(
+      `${url}${id}/publish/`,
+    );
+    return { publishUuid: response.data.publish_uuid };
   },
   createClozeTest: async (data) => {
     const createData = parseCreateClozeTestDataForBE(data);
