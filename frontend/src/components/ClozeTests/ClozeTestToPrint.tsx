@@ -27,7 +27,10 @@ const ClozeTestToPrint = React.forwardRef((props: Props, ref) => {
         sx={{ textAlign: "justify", mt: "2rem", fontSize: "1.2rem" }}
         dangerouslySetInnerHTML={{
           __html: sanitize({
-            html: props.test.textWithGaps.replaceAll("#9C27B0", "#000"),
+            html: props.test.textWithGaps.replace(
+              new RegExp("#9C27B0", "g"),
+              "#000",
+            ),
           }),
         }}
       ></Typography>

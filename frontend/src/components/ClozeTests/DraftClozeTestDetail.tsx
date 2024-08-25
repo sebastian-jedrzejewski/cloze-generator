@@ -21,7 +21,6 @@ import LoadingSpinner from "../UI/LoadingSpinner";
 import ErrorMessage from "../UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import AlertDialog from "../Layout/AlertDialog";
-import HelpModal from "../UI/HelpModal";
 import { AuthContext } from "../../store/AuthContext/AuthContext";
 
 export type ChosenWord = {
@@ -40,8 +39,8 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
   const [chosenGaps, setChosenGaps] = useState<Gap[]>([]);
   const [remainingAlternatives, setRemainingAlternatives] = useState<Gap[]>([]);
   const [chosenWord, setChosenWord] = useState<ChosenWord>(null);
+  const [alternativesMarked, setAlternativesMarked] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const { mutate: saveGaps } = useMutation({
     mutationFn: clozeTestsApi.saveClozeTestGaps,
@@ -136,22 +135,12 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: { xs: "center", sm: "flex-end" },
           alignItems: "center",
           my: "1rem",
           rowGap: 1,
-          flexDirection: { xs: "column", sm: "row" },
         }}
       >
-        <Box>
-          <Button
-            color="info"
-            variant="text"
-            onClick={() => setIsHelpModalOpen(true)}
-          >
-            How it works
-          </Button>
-        </Box>
         <Box sx={{ display: "flex", columnGap: 2 }}>
           <Button
             color="secondary"
@@ -197,10 +186,23 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
         sx={{
           ml: "auto",
           mr: "auto",
+          mb: "0.5rem",
+          display: "flex",
+          textAlign: "left",
+          color: COLORS.gray100,
+          fontSize: "0.8rem",
+        }}
+      >
+        <Box sx={{ flex: 4 }}>Predicted gaps</Box>
+        <Box sx={{ flex: 1 }}>Alternatives</Box>
+      </Box>
+      <Box
+        sx={{
+          ml: "auto",
+          mr: "auto",
           mb: "2.5rem",
           display: "flex",
           border: `2px solid ${COLORS.gray500}`,
-          flexDirection: { xs: "column", sm: "row" },
         }}
       >
         <TextWithHighlightedGaps
@@ -208,11 +210,15 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
           chosenGaps={chosenGaps}
           chosenWord={chosenWord}
           setChosenWord={setChosenWord}
+          alternatives={remainingAlternatives}
+          alternativesMarked={alternativesMarked}
         />
         <AlternativeList
           alternatives={remainingAlternatives}
           chosenWord={chosenWord}
           setChosenWord={setChosenWord}
+          alternativesMarked={alternativesMarked}
+          setAlternativesMarked={setAlternativesMarked}
         />
       </Box>
       {isSavingPending && <LoadingSpinner />}
@@ -240,12 +246,6 @@ const DraftClozeTestDetail: React.FC<Props> = (props) => {
         isOpen={isDeleteDialogOpen}
         title="Delete Open Cloze Test (Draft)"
         contentText="Are you sure you want to delete this open cloze test draft? This action is irreversible."
-      />
-      <HelpModal
-        open={isHelpModalOpen}
-        handleClose={() => {
-          setIsHelpModalOpen(false);
-        }}
       />
     </Box>
   );

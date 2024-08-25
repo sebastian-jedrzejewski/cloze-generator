@@ -9,10 +9,19 @@ type Props = {
   chosenGaps: Gap[];
   chosenWord: ChosenWord;
   setChosenWord: (word: ChosenWord | null) => void;
+  alternativesMarked: boolean;
+  alternatives: Gap[];
 };
 
 const TextWithHighlightedGaps: React.FC<Props> = (props) => {
-  const { text, chosenGaps, chosenWord, setChosenWord } = props;
+  const {
+    text,
+    chosenGaps,
+    chosenWord,
+    setChosenWord,
+    alternativesMarked,
+    alternatives,
+  } = props;
 
   const getHighlightedText = () => {
     const parts: {
@@ -23,8 +32,13 @@ const TextWithHighlightedGaps: React.FC<Props> = (props) => {
     }[] = [];
     let lastIndex = 0;
 
-    const gaps = chosenGaps.slice();
-    if (chosenWord && chosenWord.entity === "ALTERNATIVE") {
+    let gaps = chosenGaps.slice();
+    let alternativeIds: number[] = [];
+    if (alternativesMarked) {
+      gaps = gaps.concat(alternatives);
+      alternativeIds = alternatives.map((gap) => gap.index);
+      gaps.sort((a, b) => a.start - b.start);
+    } else if (chosenWord && chosenWord.entity === "ALTERNATIVE") {
       gaps.push(chosenWord.gap);
       gaps.sort((a, b) => a.start - b.start);
     }
@@ -37,13 +51,16 @@ const TextWithHighlightedGaps: React.FC<Props> = (props) => {
           ghost: false,
         });
       }
+      let isGhost = false;
+      if (alternativesMarked) {
+        isGhost = alternativeIds.includes(gap.index);
+      } else if (chosenWord?.entity === "ALTERNATIVE") {
+        isGhost = gap.index === chosenWord?.gap.index;
+      }
       parts.push({
         text: text.substring(gap.start, gap.end),
         highlighted: true,
-        ghost:
-          chosenWord?.entity === "ALTERNATIVE"
-            ? gap.index === chosenWord?.gap.index
-            : false,
+        ghost: isGhost,
         gap,
       });
       lastIndex = gap.end;
@@ -72,18 +89,21 @@ const TextWithHighlightedGaps: React.FC<Props> = (props) => {
         if (part.ghost) {
           bgcolor = "yellow";
         }
+        let border = "none";
+        if (part.gap && chosenWord?.gap.index === part?.gap.index) {
+          if (part.ghost) {
+            border = alternativesMarked ? "2px solid black" : "none";
+          } else {
+            border = "2px solid black";
+          }
+        }
         return (
           <span
             key={index}
             style={{
               backgroundColor: bgcolor,
               cursor: part.highlighted && !part.ghost ? "pointer" : "",
-              border:
-                part.gap &&
-                chosenWord?.gap.index === part?.gap.index &&
-                !part.ghost
-                  ? "2px solid black"
-                  : "none",
+              border,
               borderRadius: part.highlighted ? "5px" : "",
               padding: part.highlighted ? "2px" : "",
             }}

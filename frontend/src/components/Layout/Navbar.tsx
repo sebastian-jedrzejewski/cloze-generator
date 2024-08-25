@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -13,11 +13,14 @@ import SidebarDrawer from "./SidebarDrawer";
 import logo from "../../assets/vite.svg";
 import { AuthContext } from "../../store/AuthContext/AuthContext";
 import MenuAvatar from "../UI/MenuAvatar";
+import HelpModal from "../UI/HelpModal";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -78,6 +81,16 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1 }}></Box>
           {isAuthenticated && (
             <>
+              {location.pathname.includes("drafts") && (
+                <Button
+                  color="inherit"
+                  variant="text"
+                  sx={{ mr: "1.5rem" }}
+                  onClick={() => setIsHelpModalOpen(true)}
+                >
+                  How it works
+                </Button>
+              )}
               <MenuAvatar />
               <Button
                 variant="contained"
@@ -111,6 +124,12 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
       <SidebarDrawer isOpen={mobileOpen} toggleHandler={handleDrawerToggle} />
+      <HelpModal
+        open={isHelpModalOpen}
+        handleClose={() => {
+          setIsHelpModalOpen(false);
+        }}
+      />
     </>
   );
 };
