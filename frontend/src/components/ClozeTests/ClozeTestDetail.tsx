@@ -55,8 +55,8 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
 
   const handlePrint = useReactToPrint({
     documentTitle:
-      props.test.title?.replaceAll(" ", "-") ||
-      props.test.shortTitle?.replaceAll(" ", "-"),
+      props.test.title?.replace(new RegExp(" ", "g"), "-") ||
+      props.test.shortTitle?.replace(new RegExp(" ", "g"), "-"),
     removeAfterPrint: true,
     content: () => contentToPrint.current,
   });

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   List,
   ListItem,
   ListItemButton,
@@ -15,23 +16,38 @@ type Props = {
   alternatives: Gap[];
   chosenWord: ChosenWord;
   setChosenWord: (word: ChosenWord | null) => void;
+  alternativesMarked: boolean;
+  setAlternativesMarked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AlternativeList: React.FC<Props> = (props) => {
-  const { alternatives, chosenWord, setChosenWord } = props;
+  const {
+    alternatives,
+    chosenWord,
+    setChosenWord,
+    alternativesMarked,
+    setAlternativesMarked,
+  } = props;
 
   return (
     <Box
       sx={{
         flex: 1,
         bgcolor: COLORS.gray300,
-        borderLeft: { xs: "none", sm: `2px solid ${COLORS.gray500}` },
-        borderTop: { xs: `2px solid ${COLORS.gray500}`, sm: "none" },
+        borderLeft: `2px solid ${COLORS.gray500}`,
       }}
     >
       <List>
         {alternatives.length === 0 && (
           <Typography>No alternatives available</Typography>
+        )}
+        {alternatives.length > 0 && (
+          <Button
+            color="info"
+            onClick={() => setAlternativesMarked((prevState) => !prevState)}
+          >
+            {alternativesMarked ? "Unmark all" : "Mark all"}
+          </Button>
         )}
         {alternatives.map((gap) => (
           <ListItem key={gap.index} disablePadding>

@@ -27,6 +27,6 @@ def predict_gaps_for_text(
         },
         is_draft=True,
         user=user,
-        expiry_time=timezone.now() + timezone.timedelta(hours=2) if not user else None,
+        expiry_time=timezone.now() + timezone.timedelta(hours=1) if not user else None,
     )
     return test.id
