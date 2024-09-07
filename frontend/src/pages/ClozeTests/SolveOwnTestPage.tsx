@@ -1,16 +1,16 @@
-import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
+import { useParams } from "react-router-dom";
 
-import clozeTestsApi from "../../config/api/clozeTests/clozeTests";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import MESSAGES from "../../constants/messages";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
-import DraftClozeTestDetail from "../../components/ClozeTests/DraftClozeTestDetail";
+import clozeTestsApi from "../../config/api/clozeTests/clozeTests";
+import SolveClozeTestForm from "../../components/Forms/clozeTests/SolveClozeTestForm";
 import TestNotFoundError from "../../components/UI/TestNotFoundError";
 
-const DraftClozeTestDetailPage = () => {
+const SolveOwnTestPage = () => {
   const { id } = useParams();
   const {
     data: test,
@@ -18,8 +18,9 @@ const DraftClozeTestDetailPage = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["clozeTests", "draft", id],
-    queryFn: () => clozeTestsApi.getDraftClozeTestDetail(id),
+    queryKey: ["clozeTests", id],
+    queryFn: () => clozeTestsApi.getClozeTestDetail(id),
+    retry: 1,
   });
 
   let content = null;
@@ -37,7 +38,7 @@ const DraftClozeTestDetailPage = () => {
   }
 
   if (test) {
-    content = <DraftClozeTestDetail test={test} />;
+    content = <SolveClozeTestForm test={test} />;
   }
 
   return (
@@ -45,4 +46,4 @@ const DraftClozeTestDetailPage = () => {
   );
 };
 
-export default DraftClozeTestDetailPage;
+export default SolveOwnTestPage;

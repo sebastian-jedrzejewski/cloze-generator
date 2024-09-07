@@ -47,7 +47,9 @@ export const parseClozeTestDetailForFE = (
     isDraft: data.is_draft,
     title: data.title,
     shortTitle: data.short_title,
+    publishUuid: data.publish_uuid,
     gapIndicator: data.gap_indicator,
+    rawTextWithGaps: data.text_with_gaps,
     textWithGaps: replaceBlanks(data.text_with_gaps, data.gap_indicator),
     gaps: data.gaps,
   };

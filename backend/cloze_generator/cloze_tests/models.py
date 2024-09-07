@@ -14,6 +14,7 @@ class ClozeTest(models.Model):
     gaps = models.JSONField()
     is_draft = models.BooleanField(default=False)
     expiry_time = models.DateTimeField(blank=True, null=True)
+    publish_uuid = models.UUIDField(editable=False, unique=True, blank=True, null=True)
 
     user = models.ForeignKey(
         User,

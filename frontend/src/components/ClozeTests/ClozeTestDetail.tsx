@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,12 +12,15 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useReactToPrint } from "react-to-print";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PrintIcon from "@mui/icons-material/Print";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import ShareIcon from "@mui/icons-material/Share";
 
 import { ClozeTestDetailDTO } from "../../config/api/clozeTests/clozeTests.types";
 import { sanitize } from "../Utils/SanitizeHTML";
@@ -30,6 +33,7 @@ import LoadingSpinner from "../UI/LoadingSpinner";
 import { queryClient } from "../../config/api";
 import ClozeTestToPrint from "./ClozeTestToPrint";
 import { AuthContext } from "../../store/AuthContext/AuthContext";
+import ShareTestPopoverForm from "../Forms/clozeTests/ShareTestPopoverForm";
 
 type Props = {
   test: ClozeTestDetailDTO;
@@ -38,6 +42,9 @@ type Props = {
 const ClozeTestDetail: React.FC<Props> = (props) => {
   const { isAuthenticated } = useContext(AuthContext);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
   const navigate = useNavigate();
   const contentToPrint = useRef(null);
 
@@ -66,6 +73,10 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
     setIsDeleteDialogOpen(false);
   };
 
+  const handleShare = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   if (!Array.isArray(props.test.gaps)) {
     return null;
   }
@@ -86,10 +97,12 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: { xs: "center", lg: "flex-end" },
             alignItems: "center",
             my: "1rem",
             columnGap: 2,
+            flexWrap: "wrap",
+            rowGap: 1,
           }}
         >
           <Button
@@ -100,6 +113,26 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
             Print
           </Button>
           <Button
+            color="secondary"
+            startIcon={<AssignmentIcon />}
+            onClick={() => navigate(`/cloze-tests/solve/${props.test.id}/`)}
+          >
+            Solve
+          </Button>
+          <Tooltip
+            title="Share the link with other users to allow them to solve your test"
+            placement="top"
+            arrow
+          >
+            <Button
+              color="secondary"
+              startIcon={<ShareIcon />}
+              onClick={handleShare}
+            >
+              Share
+            </Button>
+          </Tooltip>
+          <Button
             color="error"
             variant="contained"
             startIcon={<DeleteIcon />}
@@ -107,6 +140,11 @@ const ClozeTestDetail: React.FC<Props> = (props) => {
           >
             Delete
           </Button>
+          <ShareTestPopoverForm
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+            test={props.test}
+          />
         </Box>
       )}
       <Typography variant="h3" sx={{ mb: "1.1rem" }}>

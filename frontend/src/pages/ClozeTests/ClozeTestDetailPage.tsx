@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 import clozeTestsApi from "../../config/api/clozeTests/clozeTests";
@@ -8,6 +8,7 @@ import MESSAGES from "../../constants/messages";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import ClozeTestDetail from "../../components/ClozeTests/ClozeTestDetail";
 import { isAxiosError } from "axios";
+import TestNotFoundError from "../../components/UI/TestNotFoundError";
 
 const ClozeTestDetailPage = () => {
   const { id } = useParams();
@@ -26,19 +27,7 @@ const ClozeTestDetailPage = () => {
 
   if (isError) {
     if (isAxiosError(error) && error.response?.status === 404) {
-      content = (
-        <Box
-          sx={{
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "red",
-          }}
-        >
-          <Typography variant="h4">The test wasn't found!</Typography>
-        </Box>
-      );
+      content = <TestNotFoundError />;
     } else {
       content = <ErrorMessage message={MESSAGES.SOMETHING_WENT_WRONG} />;
     }
