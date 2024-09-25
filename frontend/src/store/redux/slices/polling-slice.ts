@@ -6,7 +6,7 @@ import { TaskStatus } from "../../../config/api/clozeTests/clozeTests.types";
 
 export interface PollingState {
   taskId: string | null;
-  result: number | null; // created test id
+  result: string | null; // created test id
   pollingInterval: number | null;
   loading: boolean;
   error: string | null;
@@ -27,7 +27,7 @@ export const pollingSlice = createSlice({
     setTaskId: (state, action: PayloadAction<string>) => {
       state.taskId = action.payload;
     },
-    setResult: (state, action: PayloadAction<number>) => {
+    setResult: (state, action: PayloadAction<string>) => {
       state.result = action.payload;
     },
     setPollingInterval: (state, action: PayloadAction<number>) => {
@@ -45,6 +45,7 @@ export const pollingSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+    //@ts-ignore
     resetState: (state) => {
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = {

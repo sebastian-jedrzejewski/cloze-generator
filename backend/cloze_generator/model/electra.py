@@ -115,7 +115,7 @@ class BaseElectra(ElectraPreTrainedModel):
 
 
 class MultiObjectiveElectra(BaseElectra):
-    def __init__(self):
+    def __init__(self, config):
         electra_config = ElectraConfig.from_pretrained(
             "google/electra-base-discriminator",
             num_labels=len(id2label),

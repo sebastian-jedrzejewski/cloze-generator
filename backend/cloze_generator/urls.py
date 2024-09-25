@@ -35,3 +35,7 @@ urlpatterns = [
     path("auth/", include("djoser.urls.jwt")),
     path("generate_gaps/", GenerateGapsAPIView.as_view()),
 ]
+
+urlpatterns = [
+    path("api/v1/", include(urlpatterns)),
+]

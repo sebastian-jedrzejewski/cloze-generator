@@ -8,14 +8,15 @@ from cloze_generator.model.constants import id2label
 from cloze_generator.model.electra import MultiObjectiveElectra
 
 
-def load_model(model_path):
-    model = MultiObjectiveElectra()
-    model.load_state_dict(torch.load(model_path))
+def load_model():
+    model = MultiObjectiveElectra.from_pretrained(
+        settings.ELECTRA_REPOSITORY, token=settings.ELECTRA_REPOSITORY_TOKEN
+    )
     return model
 
 
-def pipeline(model_path):
-    loaded_model = load_model(model_path)
+def pipeline():
+    loaded_model = load_model()
 
     def pipe(text):
         from cloze_generator.model.apps import ModelConfig
@@ -54,8 +55,8 @@ def pipeline(model_path):
 threshold = 0.3
 
 
-def post_processing(model_path):
-    pipe = pipeline(model_path)
+def post_processing():
+    pipe = pipeline()
 
     def is_alternative_good(alternative, predicted_gaps, gap_to_compare=None):
         # Check if an alternative is a repetition of an already predicted gap
