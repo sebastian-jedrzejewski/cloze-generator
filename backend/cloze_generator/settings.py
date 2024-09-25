@@ -86,9 +86,12 @@ WSGI_APPLICATION = "cloze_generator.wsgi.application"
 
 AUTH_USER_MODEL = "users.User"
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+cors_allowed_origins = os.environ.get("CORS_ALLOWED_ORIGINS")
+CORS_ALLOWED_ORIGINS = (
+    cors_allowed_origins.split(",")
+    if cors_allowed_origins
+    else ["http://localhost:5173"]
+)
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -140,14 +143,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Celery
-CELERY_BROKER_URL = "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULE = {
     "delete_temporary_tests": {
         "task": "cloze_generator.cloze_tests.tasks.delete_temporary_tests",
         "schedule": crontab(),
     },
 }
+
+# Hugging Face Repository
+ELECTRA_REPOSITORY = os.environ.get("ELECTRA_REPOSITORY", "Rotar07/cloze-tests-electra")
+ELECTRA_REPOSITORY_TOKEN = os.environ.get("ELECTRA_REPOSITORY_TOKEN", "")
 
 
 # Internationalization

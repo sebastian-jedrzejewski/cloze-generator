@@ -79,11 +79,17 @@ const ShareTestPopoverForm: React.FC<Props> = (props) => {
             value={buildShareUrl(test.publishUuid)}
             sx={{ width: "35rem" }}
           />
-          <Tooltip title={copyText} placement="top">
+          <Tooltip
+            title={
+              window.isSecureContext ? copyText : "Copying over HTTP disabled"
+            }
+            placement="top"
+          >
             <IconButton
               aria-label="copy"
               onClick={copyToClipboard}
               onMouseLeave={() => setCopyText("Click to copy")}
+              disabled={!window.isSecureContext}
             >
               <ContentCopyIcon />
             </IconButton>
